@@ -52,34 +52,55 @@ markedSite.prototype.addPlaceHolder = function(height,direction){
 // });
 
 
-
+///////////////////////////////////////////
 
 function saveChanges(url) {
+  
   // Get a value saved:
-  testArr.push(url)
-  var theValue = testArr;
-
-  // Check that there's some code there.
-  if (!theValue) {
-    alert('Error: No value specified');
-    return;
-  }
-
+  // testArr.push(url)
+  
+  var newSite = url;
+  
   // Save it! using the Chrome extension storage API.
-  chrome.storage.sync.set({'value': theValue}, function() {
+  chrome.storage.sync.set({'newSite': newSite}, function() {
     // Notify that we saved.
-    alert(theValue);
+    alert('saved:' +  newSite);
   });
+
+
+  // chrome.storage.sync.get(["savedSites"], function(result) {
+  //       let arr = result[savedSites]?result[savedSites]:[];
+
+  //       arr.unshift(url);
+
+  //       let siteObj = {};
+  //       siteObj[savedSites] = arr;
+
+  //       chrome.storage.sync.set(siteObj, function() {
+  //           alert("Saved a new array item");
+  //       });
+  // });
+
 }
 
-// eventually, you can "get" the saved value of 'value'
 
-// listener for when you go to a new URL... will use as a template for saving 
+
+
+// listener for when you go to a new URL... 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
+  alert('changes made!')
   for (key in changes) {
     let storageChange = changes[key];
     alert('new url!')
   }
+
+    // read existing value in get, and append the new value
+    // StorageArea.get(null,function(items){
+    //   for(item in items){
+    //     alert('!')
+    //     alert(items[item])
+    //   }
+
 });
       
       
@@ -92,6 +113,8 @@ var counter = 0;
 chrome.browserAction.onClicked.addListener(function (tab) {
     counter++;
     if (counter > 0) {
+    
+      
 
     var queryInfo = {
       active: true,
@@ -105,7 +128,7 @@ chrome.browserAction.onClicked.addListener(function (tab) {
       console.assert(typeof url == 'string', 'tab.url should be a string');
       if(url){
         siteInfo.currentUrl = url;
-        alert(siteInfo.currentUrl)
+        // alert('visited' + siteInfo.currentUrl)
         saveChanges(url);
       }
     })
