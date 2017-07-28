@@ -2,8 +2,6 @@ let siteInfo = {
   currentUrl: null
 }
 
-let testArr = [];
-
 let markedSite = function(){
   this.url = ''
   this.placeholders = []
@@ -59,20 +57,21 @@ function saveChanges(url) {
   // Get a value saved:
   // testArr.push(url)
   
-  var newSite = url;
+  let newSite = url;
   
-  // Save it! using the Chrome extension storage API.
-  chrome.storage.sync.set({'newSite': newSite}, function() {
-    // Notify that we saved.
-    alert('saved:' +  newSite);
-  });
+  // // Save it! using the Chrome extension storage API.
+  // chrome.storage.sync.set({'newSite': newSite}, function() {
+  //   // Notify that we saved.
+  //   alert('saved:' +  newSite);
+  // });
 
-
+  // untested
   // chrome.storage.sync.get(["savedSites"], function(result) {
+
   //       let arr = result[savedSites]?result[savedSites]:[];
-
-  //       arr.unshift(url);
-
+    
+  //       arr.unshift(newSite);
+        
   //       let siteObj = {};
   //       siteObj[savedSites] = arr;
 
@@ -80,10 +79,24 @@ function saveChanges(url) {
   //           alert("Saved a new array item");
   //       });
   // });
+    chrome.storage.sync.get([url], function(result) {
+            
+            var array = result[url] ? result[url] : [];
+
+            alert("trying to save");
+
+            array.unshift('test');
+
+            var jsonObj = {};
+            jsonObj[url] = array;
+
+            chrome.storage.sync.set(jsonObj, function() {
+                alert("Saved a new array item");
+            });
+        });
+
 
 }
-
-
 
 
 // listener for when you go to a new URL... 
