@@ -1,24 +1,16 @@
-let siteInfo = {
-  currentUrl: null
-}
-
-
 let placeHolder = function(height, direction){
   this.height = height,
   this.direction = direction // depending on mouse click
 }
 
-
-///////////////////////////////////////////
-
-function saveChanges(url) {
+function saveChanges(url, text) {
     chrome.storage.sync.get([url], function(result) {
-          let mark = new placeHolder(10, 'left')
-          let array = result[url] ? result[url] : [];
-          array.push(mark);
+          
+          let arr = result[url] ? result[url] : [];
+          arr.push(text);
 
           let jsonObj = {};
-          jsonObj[url] = array;
+          jsonObj[url] = arr;
 
           chrome.storage.sync.set(jsonObj, function() {
             alert('mark saved!')
@@ -27,7 +19,7 @@ function saveChanges(url) {
 }
 
 
-// listener for when you go to a new URL... 
+// listener for when you go to a new URL... this is really for debugging. I'll delete this!
 chrome.storage.onChanged.addListener(function(changes, namespace) {
   for (key in changes) {
     let storageChange = changes[key];
@@ -35,62 +27,13 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
   }
 });
       
- 
-
-var counter = 0;
-chrome.browserAction.onClicked.addListener(function (tab) {
-    counter++;
-    if (counter > 0) {
-
-    var queryInfo = {
-      active: true,
-      currentWindow: true
-    };
-    
-    chrome.tabs.query(queryInfo, function(tabs) {
-      
-      var tab = tabs[0];
-      var url = tab.url;
-      console.assert(typeof url == 'string', 'tab.url should be a string');
-      if(url){
-        siteInfo.currentUrl = url;
-        saveChanges(url);
-      }
-    })
-  }
-    
-});
-
-
-//  The Context menu will be active on the page in general, on any text selection, 
-// image (or element that has a “src” attribute) and all links.
-
-
-
 
  var clickHandler = function(e) {
-    // var url = e.pageUrl;
-    // var buzzPostUrl = "http://www.google.com/buzz/post?";
-
-    // if (e.selectionText) {
-    //     // The user selected some text, put this in the message.
-    //     buzzPostUrl += "message=" + encodeURI(e.selectionText) + "&";
-    // }
-
-    // if (e.mediaType === "image") {
-    //     buzzPostUrl += "imageurl=" + encodeURI(e.srcUrl) + "&";
-    // }
-
-    // if (e.linkUrl) {
-    //     // The user wants to buzz a link.
-    //     url = e.linkUrl;
-    // }
-
-    // buzzPostUrl += "url=" + encodeURI(url);
-
-    // // Open the page up.
-    // chrome.tabs.create(
-    //       {"url" : buzzPostUrl });
+    var url = e.pageUrl;
+    // let direction = null; // this depends on where their mouse is
+    // let position = null;
+    let text = e.selectionText;
+    saveChanges(url, text)
 };
 
 chrome.contextMenus.create({
@@ -98,3 +41,30 @@ chrome.contextMenus.create({
     "contexts": ["page", "selection", "image", "link"],
     "onclick" : clickHandler
   });
+
+
+
+
+// this was code for the popup:
+// var counter = 0;
+// chrome.browserAction.onClicked.addListener(function (tab) {
+//     counter++;
+//     if (counter > 0) {
+
+//     var queryInfo = {
+//       active: true,
+//       currentWindow: true
+//     };
+    
+//     chrome.tabs.query(queryInfo, function(tabs) {
+      
+//       var tab = tabs[0];
+//       var url = tab.url;
+//       console.assert(typeof url == 'string', 'tab.url should be a string');
+//       if(url){
+//         siteInfo.currentUrl = url;
+//         saveChanges(url);
+//       }
+//     })
+//   }   
+// });
