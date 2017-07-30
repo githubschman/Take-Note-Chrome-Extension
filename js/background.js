@@ -1,7 +1,43 @@
-let placeHolder = function(height, direction){
-  this.height = height,
-  this.direction = direction // depending on mouse click
-}
+// this will run anytime a new site is visited. If the site contains markers,
+// it will alert that it has stuff saved. 
+
+
+chrome.webNavigation.onCompleted.addListener(function(){
+  alert('hello new page?')
+})
+
+//  let queryInfo = {
+//       active: true,
+//       currentWindow: true
+//     };
+ 
+// alert('new page!')    
+// chrome.tabs.query(queryInfo, function(tabs) {
+  
+//   var tab = tabs[0];
+//   var url = tab.url;
+
+ 
+//   if(url){
+//      chrome.storage.sync.get([url], function(result) {
+//         if(result){
+//           alert('you have saved something on this page!')
+//         }else{
+//           alert('nothing saved on this page!')
+//         }
+//      })
+//     saveChanges(url);
+//   }
+//   return url
+// })
+
+
+
+
+// let placeHolder = function(height, direction){
+//   this.height = height,
+//   this.direction = direction // depending on mouse click
+// }
 
 function saveChanges(url, text) {
     chrome.storage.sync.get([url], function(result) {
@@ -11,6 +47,7 @@ function saveChanges(url, text) {
 
           let jsonObj = {};
           jsonObj[url] = arr;
+          //{'www.taleoftwocities.net': ["it was the best of times", "it was the worst of times"]}
 
           chrome.storage.sync.set(jsonObj, function() {
             alert('mark saved!')
@@ -36,6 +73,13 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
     saveChanges(url, text)
 };
 
+// chrome.contextMenus.create({
+//     "title": "Save Your Place",
+//     "contexts": ["page", "selection", "image", "link"],
+//     "onclick" : clickHandler
+//   });
+
+// make it only come up on text?
 chrome.contextMenus.create({
     "title": "Save Your Place",
     "contexts": ["page", "selection", "image", "link"],
@@ -51,20 +95,20 @@ chrome.contextMenus.create({
 //     counter++;
 //     if (counter > 0) {
 
-//     var queryInfo = {
-//       active: true,
-//       currentWindow: true
-//     };
+  //   var queryInfo = {
+  //     active: true,
+  //     currentWindow: true
+  //   };
     
-//     chrome.tabs.query(queryInfo, function(tabs) {
+  //   chrome.tabs.query(queryInfo, function(tabs) {
       
-//       var tab = tabs[0];
-//       var url = tab.url;
-//       console.assert(typeof url == 'string', 'tab.url should be a string');
-//       if(url){
-//         siteInfo.currentUrl = url;
-//         saveChanges(url);
-//       }
-//     })
-//   }   
+  //     var tab = tabs[0];
+  //     var url = tab.url;
+  //     console.assert(typeof url == 'string', 'tab.url should be a string');
+  //     if(url){
+  //       siteInfo.currentUrl = url;
+  //       saveChanges(url);
+  //     }
+  //   })
+  // }   
 // });

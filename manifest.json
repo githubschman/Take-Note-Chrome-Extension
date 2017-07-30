@@ -15,7 +15,9 @@
     "permissions": [
       "activeTab",
       "contextMenus",
-      "storage"
+      "storage",
+      "tabs",
+      "webNavigation"
     ]
 }
 
@@ -29,4 +31,3 @@
   },
 
   */
-  
