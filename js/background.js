@@ -1,6 +1,34 @@
 // this will run anytime a new site is visited. If the site contains markers,
 // it will alert that it has stuff saved. 
 
+alert("wtf come on");
+chrome.runtime.onMessage.addListener (
+    function (request, sender, sendResponse) {
+        alert("Reached Background.js");
+        if (request.Message == "getTextFile") {
+            alert("Entered IF Block");
+            $.get("http://localhost:63342/Projects/StackOverflow/ChromeEXT/helloWorld1", function(response) {
+                alert(response);
+
+                // to send back your response  to the current tab
+                chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                    chrome.tabs.sendMessage(tabs[0].id, {fileData: response}, function(response) {
+                        //?
+                    });
+                });
+
+
+            })
+        }
+        else {
+            alert("Did not receive the response!!!")
+        }
+    }
+);
+
+
+
+/////////////////////
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   let url = changeInfo.url;
@@ -9,26 +37,17 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
           // alert('looking in ' + url)
           let text = result[url]
           if(text){
+            // send mark text to content.js 
 
-            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-              chrome.tabs.sendMessage(tabs[0].id, {markText: text}, function() {
-                alert('content recieved text!');
-              });
-            });
+            chrome.runtime.sendMessage(null, {"markText": text}, null, function(response){
+              alert("sending over " + response.markText)
+            })
+            // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            //   chrome.tabs.sendMessage(tabs[0].id, {markText: text}, function() {
+            //     alert('content recieved text!');
+            //   });
+            // });
 
-            // let selection = $(`*:contains(${text})`).css( "text-decoration", "underline" );;
-
-
-            // let div = document.createElement("DIV");
-            // div.id = "chrome-ext-mark"
-            // // alert('div created')
-            // selection.appendChild(div);
-            // alert('div appended to selection')
-            // let img = document.createElement("IMG");
-            // img.src = "/images/mark.png";
-            // div.appendChild(img);
-            // alert('image added')
-            alert(result[url])
           }
       })
   }

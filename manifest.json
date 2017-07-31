@@ -7,9 +7,9 @@
     },
     "content_scripts": [
         {
-            "matches": ["https://www.google.com/*"],
+            "matches": ["<all_urls>"],
             "css": ["style.css"],
-            "js": ["js/content.js"]
+            "js": ["js/jquery-3.2.1.js", "js/content.js"]
         }
     ],
     "version": "1.0",
