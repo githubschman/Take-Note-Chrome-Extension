@@ -6,15 +6,28 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   let url = changeInfo.url;
   if(url){
         chrome.storage.sync.get([url], function(result) {
+          // alert('looking in ' + url)
           let text = result[url]
           if(text){
-            let selection = $(`*:contains(${text})`);
-            alert('yay')
-            let div = document.createElement("DIV");
-            selection.appendChild(div);
-            let img = document.createElement("IMG");
-            img.src = "/images/mark.png";
-            div.appendChild(img);
+
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+              chrome.tabs.sendMessage(tabs[0].id, {markText: text}, function() {
+                alert('content recieved text!');
+              });
+            });
+
+            // let selection = $(`*:contains(${text})`).css( "text-decoration", "underline" );;
+
+
+            // let div = document.createElement("DIV");
+            // div.id = "chrome-ext-mark"
+            // // alert('div created')
+            // selection.appendChild(div);
+            // alert('div appended to selection')
+            // let img = document.createElement("IMG");
+            // img.src = "/images/mark.png";
+            // div.appendChild(img);
+            // alert('image added')
             alert(result[url])
           }
       })
@@ -22,7 +35,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 
 }); 
 
-// add onclick to img?
+// add onclick to img? for deletion? add <a>?
+
 function saveChanges(url, text) {
     chrome.storage.sync.get([url], function(result) {       
         let obj = {};
