@@ -2,9 +2,7 @@
     "name": "Save My Place",
     "description": "Saves your place on a blog post, article, or anything else you're reading.",
     "background": {
-        "scripts": [
-            "js/background.js"
-        ]
+        "scripts":  ["js/jquery-3.2.1.js","js/background.js"]
     },
     "version": "1.0",
     "manifest_version": 2,
@@ -25,9 +23,22 @@
 
 /*
 
+        
+        "css": ["style.css"],
+        "persistent": true
+
   "icons" : {
     "16" : "buzz-little.png",
     "128" : "buzz-big.png"
   },
+
+
+  ,
+    "content_scripts": [
+    {
+      "css": ["style.css"],
+      "js": ["jquery-3.2.1.js", "js/content.js"]
+    }
+  ]
 
   */

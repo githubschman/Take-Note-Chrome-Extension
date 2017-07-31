@@ -2,56 +2,34 @@
 // it will alert that it has stuff saved. 
 
 
-chrome.webNavigation.onCompleted.addListener(function(){
-  alert('hello new page?')
-})
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  let url = changeInfo.url;
+  if(url){
+        chrome.storage.sync.get([url], function(result) {
+          let text = result[url]
+          if(text){
+            let selection = $(`*:contains(${text})`);
+            alert('yay')
+            let div = document.createElement("DIV");
+            selection.appendChild(div);
+            let img = document.createElement("IMG");
+            img.src = "/images/mark.png";
+            div.appendChild(img);
+            alert(result[url])
+          }
+      })
+  }
 
-//  let queryInfo = {
-//       active: true,
-//       currentWindow: true
-//     };
- 
-// alert('new page!')    
-// chrome.tabs.query(queryInfo, function(tabs) {
-  
-//   var tab = tabs[0];
-//   var url = tab.url;
+}); 
 
- 
-//   if(url){
-//      chrome.storage.sync.get([url], function(result) {
-//         if(result){
-//           alert('you have saved something on this page!')
-//         }else{
-//           alert('nothing saved on this page!')
-//         }
-//      })
-//     saveChanges(url);
-//   }
-//   return url
-// })
-
-
-
-
-// let placeHolder = function(height, direction){
-//   this.height = height,
-//   this.direction = direction // depending on mouse click
-// }
-
+// add onclick to img?
 function saveChanges(url, text) {
-    chrome.storage.sync.get([url], function(result) {
-          
-          let arr = result[url] ? result[url] : [];
-          arr.push(text);
-
-          let jsonObj = {};
-          jsonObj[url] = arr;
-          //{'www.taleoftwocities.net': ["it was the best of times", "it was the worst of times"]}
-
-          chrome.storage.sync.set(jsonObj, function() {
-            alert('mark saved!')
-          });
+    chrome.storage.sync.get([url], function(result) {       
+        let obj = {};
+        obj[url] = text; // you can only have one mark 
+        chrome.storage.sync.set(obj, function() {
+          alert('mark saved!')
+        });
       });
 }
 
@@ -64,27 +42,19 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
   }
 });
       
-
- var clickHandler = function(e) {
+var clickHandler = function(e) {
     var url = e.pageUrl;
-    // let direction = null; // this depends on where their mouse is
-    // let position = null;
     let text = e.selectionText;
-    saveChanges(url, text)
+    if(text.length >= 40){
+      saveChanges(url, text)
+    }
 };
 
-// chrome.contextMenus.create({
-//     "title": "Save Your Place",
-//     "contexts": ["page", "selection", "image", "link"],
-//     "onclick" : clickHandler
-//   });
-
-// make it only come up on text?
 chrome.contextMenus.create({
     "title": "Save Your Place",
     "contexts": ["page", "selection", "image", "link"],
     "onclick" : clickHandler
-  });
+});
 
 
 
