@@ -1,20 +1,24 @@
-alert("ughhhh");
+
 $(document).ready(function() {
     alert("DOM READY!");
-    $(document.documentElement).keydown(function (e) {
-        alert("Key Has Been Pressed!");
-        chrome.runtime.sendMessage({Message: "getTextFile"}, function (response) {
-            alert('got it!');
-        })
+        chrome.extension.onMessage.addListener(
+                function(request, sender, sendResponse){
+                    alert("inside msg");
+                    var text = request.markText;
+                    alert(text);
 
-    })
+                });
 });
 
+/////
 
-// accept messages from background
-chrome.runtime.onMessage.addListener (function (request, sender, sendResponse) {
-    alert("Contents Of Text File = " + request.fileData);
-});
+    // $(document.documentElement).keydown(function (e) {
+    //     alert("Key Has Been Pressed!");
+    //     chrome.runtime.sendMessage({Message: "getTextFile"}, function (response) {
+    //         alert('got it!');
+    //     })
+
+    // })
 
 //////////
 // alert('content???')
