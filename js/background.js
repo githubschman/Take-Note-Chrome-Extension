@@ -28,28 +28,29 @@
 
 
 /////////////////////
+$(document).ready(function() {
+  chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    let url = changeInfo.url;
+    if(url){
+          chrome.storage.sync.get([url], function(result) {
+            // alert('looking in ' + url)
+            let text = result[url]
+            if(text){
+            // send mark text to content.js 
+              alert("Reached Background.js");
+                      // to send back your response  to the current tab
+                  var message = {markText: text};
+                  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                    alert('tryna send message')
+                      var tabId = tabs[0].id;
+                      chrome.tabs.sendMessage(tabId, message);
+                  });
+            }
+        })
+    }
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  let url = changeInfo.url;
-  if(url){
-        chrome.storage.sync.get([url], function(result) {
-          // alert('looking in ' + url)
-          let text = result[url]
-          if(text){
-          // send mark text to content.js 
-            alert("Reached Background.js");
-                    // to send back your response  to the current tab
-                var message = {markText: text};
-                chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-                  alert('tryna send message')
-                    var tabId = tabs[0].id;
-                    chrome.tabs.sendMessage(tabId, message);
-                });
-          }
-      })
-  }
-
-}); 
+  }); 
+})
 
 // add onclick to img? for deletion? add <a>?
 
