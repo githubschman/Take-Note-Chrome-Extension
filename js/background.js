@@ -1,31 +1,3 @@
-// this will run anytime a new site is visited. If the site contains markers,
-// it will alert that it has stuff saved. 
-
-// chrome.runtime.onMessage.addListener (
-//     function (request, sender, sendResponse) {
-//         alert("Reached Background.js");
-//         if (request.Message == "getTextFile") {
-//             alert("Entered IF Block");
-//             $.get("http://localhost:63342/Projects/StackOverflow/ChromeEXT/helloWorld1", function(response) {
-//                 alert(response);
-
-//                 // to send back your response  to the current tab
-//                 chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-//                     chrome.tabs.sendMessage(tabs[0].id, {fileData: text}, function(response) {
-//                         //?
-//                     });
-//                 });
-
-
-//             })
-//         }
-//         else {
-//             alert("Did not receive the response!!!")
-//         }
-//     }
-// );
-
-
 
 /////////////////////
 $(document).ready(function() {
@@ -36,15 +8,7 @@ $(document).ready(function() {
             // alert('looking in ' + url)
             let text = result[url]
             if(text){
-            // send mark text to content.js 
-              alert("Reached Background.js");
-                      // to send back your response  to the current tab
-                  var message = {markText: text};
-                  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-                    alert('tryna send message')
-                      var tabId = tabs[0].id;
-                      chrome.tabs.sendMessage(tabId, message);
-                  });
+              alert(text)
             }
         })
     }
@@ -52,14 +16,13 @@ $(document).ready(function() {
   }); 
 })
 
-// add onclick to img? for deletion? add <a>?
 
 function saveChanges(url, text) {
     chrome.storage.sync.get([url], function(result) {       
-        let obj = {};
-        obj[url] = text; // you can only have one mark 
-        chrome.storage.sync.set(obj, function() {
-          alert('mark saved!')
+        result[url] = result[url] ? result[url] : []
+        result[url].push(text); // you can save a lot of text
+        chrome.storage.sync.set(result, function() {
+          alert(result[url].length)
         });
       });
 }
@@ -76,13 +39,13 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 var clickHandler = function(e) {
     var url = e.pageUrl;
     let text = e.selectionText;
-    if(text.length >= 40){
+    if(text.length >= 10){
       saveChanges(url, text)
     }
 };
 
 chrome.contextMenus.create({
-    "title": "Save Your Place",
+    "title": "Take Note",
     "contexts": ["page", "selection", "image", "link"],
     "onclick" : clickHandler
 });
