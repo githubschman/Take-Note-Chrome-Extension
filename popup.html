@@ -1,29 +1,30 @@
 <!doctype html>
-<!--
- This page is shown when the extension button is clicked, because the
- "browser_action" field in manifest.json contains the "default_popup" key with
- value "popup.html".
- -->
 <html>
   <head>
-    <title>Getting Started Extension's Popup</title>
+    <title>Your Notes</title>
     <style>
       body {
-        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-        font-size: 100%;
+        min-width:357px;
+        overflow-x:hidden;
       }
-      #status {
-        white-space: pre;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        max-width: 400px;
+      img {
+        margin:5px;
+        border:2px solid black;
+        vertical-align:middle;
+        width:75px;
+        height:75px;
       }
-</style>
+    </style>
+
+
+    <script type="text/javascript" src="/js/jquery-3.2.1.js"></script>
     <script src="js/popup.js"></script>
   </head>
   <body>
-    <div id="status"></div>
-    <img id="image-result" hidden>
+    <div id="points" style="text-align: center;">
+      <ul>
+        <li>test1</li>
+      </ul>
+    </div>
   </body>
 </html>
-
