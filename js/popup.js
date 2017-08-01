@@ -1,30 +1,38 @@
-
-console.log('hay1')
-// this was code for the popup:
-
-console.log('hay2')
 var queryInfo = {
 active: true,
 currentWindow: true
 };
 
+function clickHandler(){
+    console.log('i cant believe this works')
+}
+
 chrome.tabs.query(queryInfo, function(tabs) {
 
-var tab = tabs[0];
-var url = tab.url;
+    var tab = tabs[0];
+    var url = tab.url;
 
-if(url){
-    console.log('hay3')
-
-chrome.storage.sync.get([url], function(result) {   
-    console.log(url) 
-    console.log($("#points ul"))
-    $("#points ul").append('<li>test test teeeest</li>');
-
-});
-
-}
+    if(url){
+        chrome.storage.sync.get([url], function(result) {   
+            console.log(url)
+            if(result[url]){
+                result[url].forEach(note => {
+                    $("#points ul").append('<li>' + note + ' <button class="delete" id="' + note + '"> DEL </button>' + '</li>');
+                })
+            }
+        });
+    }
 })  
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    let button = document.getElementsByClassName('delete');
+    // onClick's logic below:
+    console.log(button)
+    button.addEventListener('click', function() {
+        console.log('tryna delete stuff')
+    });
+});
 
 
 // var notifier,
