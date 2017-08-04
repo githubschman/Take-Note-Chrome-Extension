@@ -1,26 +1,10 @@
-$(document).ready(function() {
-  chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    let url = changeInfo.url;
-    if(url){
-          chrome.storage.sync.get([url], function(result) {
-            let text = result[url]
-            if(text){
-             // alert(text)
-            }
-        })
-    }
-
-  }); 
-})
-
-
 function saveChanges(url, text) {
     chrome.storage.sync.get([url], function(result) {       
         result[url] = result[url] ? result[url] : []
-        result[url].push(text); // you can save a lot of text
-        chrome.storage.sync.set(result, function() {
-           alert(result[url].length)
-        });
+        if(result[url].indexOf(text) < 0){
+          result[url].push(text); // no dupes
+        }
+        chrome.storage.sync.set(result, function() {});
       });
 }
 
@@ -40,8 +24,8 @@ chrome.contextMenus.create({
 });
 
 var queryInfo = {
-active: true,
-currentWindow: true
+  active: true,
+  currentWindow: true
 };
 
 function deletedNote(newList){
@@ -53,9 +37,7 @@ function deletedNote(newList){
 
     chrome.storage.sync.get([url], function(result) {
         result[url] = newList;       
-        chrome.storage.sync.set(result, function() {
-          alert(result[url].length)
-        });
+        chrome.storage.sync.set(result, function() {});
       });
   })
 }
@@ -65,6 +47,5 @@ function deletedNote(newList){
 chrome.storage.onChanged.addListener(function(changes, namespace) {
   for (key in changes) {
     let storageChange = changes[key];
-    alert('yep, a new url has been added!')
   }
 });

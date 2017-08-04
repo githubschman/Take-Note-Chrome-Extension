@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Dialog Prompt - Chrome</title>
+    <title>Your Notes</title>
     <style>
     body {
       overflow: hidden;
@@ -14,8 +14,16 @@
         padding: 20px;
     }
     </style>
+    <script type="text/javascript" src="/js/jquery-3.2.1.js"></script>
+    <script src="js/popup.js"></script>
   </head>
   <body>
-    <p>This is a dialog prompt.</p>
+    <a id="link">Your Notes:</a>
+    <div id="pointz" style="text-align: left;">
+      <ul>
+      </ul>
+
+      <button id="dialog"> pop out notes </button>
+    </div>
   </body>
 </html>
