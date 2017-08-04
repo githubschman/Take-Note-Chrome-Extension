@@ -32,10 +32,11 @@ function getAllNotes(){
         if(result){
             for(let address in result){
                 if(result[address]){
+                    let com = address.indexOf('.com') < 0 ? address.indexOf('.org') : address.indexOf('.com');
                     if(address.indexOf('www') < 0){
-                        titles.push(address.slice(address.indexOf('//')+2, address.indexOf('.com')))
+                        titles.push(address.slice(address.indexOf('//')+2, com))
                     }else{
-                        titles.push(address.slice(address.indexOf('www')+4, address.indexOf('.com')))
+                        titles.push(address.slice(address.indexOf('www')+4, com))
                     }
                     sites.push(address)
                 }
@@ -49,8 +50,6 @@ function getAllNotes(){
 }
 
 /// EVENT HANDLERS
-
-
 function handleSites(e){
     let site = e.target.id, url = e.target.href;
     if(e.target.outerText === 'remove site'){
@@ -62,11 +61,12 @@ function handleSites(e){
         $("#specific").fadeIn();
         $("#spec").text(url);
         $("#specificPoints ul").empty()
-        
+        let editSpec = document.querySelector('#editSpec')
+        editSpec.name = url;
         chrome.storage.sync.get([url], function(result) {  
         result[url].forEach(note => {
                 let noteID = note.replace(/\W+/g, "")
-                    $("#specificPoints ul").append('<li id="' + noteID + 'note' + '">' + note + '<button> edit </button> <button name="' + url + '" class="delete" id="' + note + '"> delete </button>' + '</li>');
+                    $("#specificPoints ul").append('<li id="' + noteID + 'note' + '">' + note + '</li>');
                 })
         });
         
@@ -105,22 +105,6 @@ function deleteNote(text) {
     });
 }  
 
-function deleteSpecNote(text, url) {
-
-    chrome.storage.sync.get([url], function(result) {      
-        let first = result[url].slice(0,result[url].indexOf(text));
-        let last = result[url].slice(result[url].indexOf(text)+1);
-        result[url] = [...first, ...last];
-
-        text = text.replace(/\W+/g, "")
-        let id = '#' + text + 'note';
-        $(id).hide();
-
-        let background = chrome.extension.getBackgroundPage();
-        background.deletedNote(result[url]);
-
-    });
-}
 
 function deleteSite(url){
     chrome.storage.sync.get([url], function(result) { 
@@ -141,14 +125,9 @@ function handleNote(e){
     }   
 }  
 
-function handleSpecNote(e){
-    if(e.target.outerText === 'delete'){
-        deleteSpecNote(e.target.id, e.target.name);
-    }
-    // else if(e.target.outerText === 'edit'){
-    //     editNote(e.target.id, e.target.name);
-    // }   
-}  
+function goToSite(e){
+    chrome.tabs.create({url: e.target.name});
+}
 
 
 function init() {
@@ -158,9 +137,9 @@ function init() {
 
     let notes = document.querySelector('#points');
     notes.addEventListener('click', handleNote, false)
-    
-    let spec = document.querySelector('#specificPoints');
-    spec.addEventListener('click', handleSpecNote, false)
+
+    let editSpec = document.querySelector('#editSpec')
+    editSpec.addEventListener('click', goToSite, false)
 
     $("#all").hide();
     $("#specific").hide();
