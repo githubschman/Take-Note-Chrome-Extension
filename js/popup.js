@@ -13,10 +13,13 @@ chrome.tabs.query(queryInfo, function(tabs) {
 
             if(result[url]){
                 result[url].forEach(note => {
-                    let noteID = note.replace(/\W+/g, "")
-                    $("#points ul").append('<li id="' + noteID + 'note' + '">' + note + '<button> edit </button> <button class="delete" id="' + note + '"> delete </button>' + '</li>');
+                    if(note){
+                        let noteID = note.replace(/\W+/g, "")
+                        $("#points ul").append('<li id="' + noteID + 'note' + '">' + note + '<button> edit </button> <button class="delete" id="' + note + '"> delete </button>' + '</li>');
+                    }
                 })
             }
+            // maybe move this to init?
             // $("#pointz ul").append('<li>lol this prob wont work lol</li>')
         });
     }
@@ -31,19 +34,16 @@ function deleteNote(text) {
 
         if(url){
             chrome.storage.sync.get([url], function(result) {      
-                console.log(result[url])
                 let first = result[url].slice(0,result[url].indexOf(text));
                 let last = result[url].slice(result[url].indexOf(text)+1);
                 result[url] = [...first, ...last];
 
                 text = text.replace(/\W+/g, "")
                 let id = '#' + text + 'note';
-                console.log(id)
                 $(id).hide();
 
                 let background = chrome.extension.getBackgroundPage();
                 background.deletedNote(result[url]);
-
 
             });
         }
@@ -66,7 +66,8 @@ function getAllNotes(){
                 }
             }
             titles.forEach((title, i) => {
-                $("#sites ul").append('<li id="' + sites[i] + '">' + '<a href=' + sites[i] + '>' + title + '</a> <button class="deleteSite" id="' + sites[i] + '"> remove site </button>' + '</li>');
+                let siteClass = sites[i].replace(/\W+/g, "");
+                $("#sites ul").append('<li id="' + sites[i] + '" class =' +  siteClass + '>' + '<a href=' + sites[i] + '>' + title + '</a> <button class="deleteSite" id="' + sites[i] + '"> remove site </button>' + '</li>');
             })
         }
     });
@@ -78,7 +79,9 @@ function editNote(){
 }
 
 function deleteSite(url){  
-    chrome.storage.sync.get([url], function(result) {      
+    chrome.storage.sync.get([url], function(result) { 
+        let theClass = "." + url.replace(/\W+/g, "")
+        $(theClass).hide();     
         result[url] = null;
         let background = chrome.extension.getBackgroundPage();
         background.deletedSite(url);
@@ -96,7 +99,7 @@ function showDialog(){
     });
 }  
 
-function editNote(e){
+function handleNote(e){
     if(e.target.outerText === 'delete'){
         deleteNote(e.target.id);
     }
@@ -106,12 +109,24 @@ function editNote(e){
 }  
 
 function handleSites(e){
-    let site = e.target.id, link = e.target.href;
+    let site = e.target.id, url = e.target.href;
     if(e.target.outerText === 'remove site'){
         deleteSite(site)
     }
     else {
-        chrome.tabs.create({url: link});
+        $("#single").hide();
+        $("#all").hide();
+        $("#specific").fadeIn();
+        $("#spec").text(url);
+        $("#specificPoints ul").empty()
+        
+        chrome.storage.sync.get([url], function(result) {  
+        result[url].forEach(note => {
+                let noteID = note.replace(/\W+/g, "")
+                    $("#specificPoints ul").append('<li id="' + noteID + 'note' + '">' + note + '<button> edit </button> <button class="delete" id="' + note + '"> delete </button>' + '</li>');
+                })
+        });
+        
     }
 }
 
@@ -122,18 +137,25 @@ function init() {
     dialog.addEventListener('click', showDialog, false);
 
     let notes = document.querySelector('#points');
-    notes.addEventListener('click', editNote, false)
+    notes.addEventListener('click', handleNote, false)
+    
+    let spec = document.querySelector('#spec');
+    spec.addEventListener('click', handleNote, false)
 
     $("#all").hide();
+    $("#specific").hide();
 
     $("#showHome").click(function(){
-        $("#all").show();
+
         $("#single").hide();
+        $("#specific").hide();
+        $("#all").fadeIn();
     });
 
     $("#showSingle").click(function(){
         $("#all").hide();
-        $("#single").show();
+        $("#specific").hide();
+        $("#single").fadeIn();
     });
 
     getAllNotes();
