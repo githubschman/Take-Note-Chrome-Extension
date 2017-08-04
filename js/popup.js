@@ -53,16 +53,17 @@ function getAllNotes(){
         let titles = [], sites = [];
         if(result){
             for(let address in result){
-                if(address.indexOf('www') < 0){
-                    titles.push(address.slice(address.indexOf('//')+2, address.indexOf('.com')))
-                }else{
-                    titles.push(address.slice(address.indexOf('www')+4, address.indexOf('.com')))
+                if(result[address]){
+                    if(address.indexOf('www') < 0){
+                        titles.push(address.slice(address.indexOf('//')+2, address.indexOf('.com')))
+                    }else{
+                        titles.push(address.slice(address.indexOf('www')+4, address.indexOf('.com')))
+                    }
+                    sites.push(address)
                 }
-                sites.push(address)
             }
             titles.forEach((title, i) => {
-                console.log('getting titles')
-                $("#sites ul").append('<li id="' + title + '">' + '<a href=' + sites[i] + '>' + title + '</a> <button class="deleteSite" id="' + title + '"> delete </button>' + '</li>');
+                $("#sites ul").append('<li id="' + sites[i] + '">' + '<a href=' + sites[i] + '>' + title + '</a> <button class="deleteSite" id="' + title + '"> remove site </button>' + '</li>');
             })
         }
     });
@@ -72,6 +73,15 @@ function getAllNotes(){
 function editNote(){
     
 }
+
+function deleteSite(url){   
+    chrome.storage.sync.get(null, function(result) {      
+        result[url] = null;
+        let background = chrome.extension.getBackgroundPage();
+        background.deletedSite(result[url]);
+    });
+}
+
 
 // pop out your notes??
 function showDialog(){
@@ -90,8 +100,21 @@ function editNote(e){
     else if(e.target.outerText === 'edit'){
         editNote(e.target.id);
     }
+    else if(e.target.outerText === 'remove site'){
+        deleteSite(e.target.href)
+    }
+    
 }  
 
+function goToPage(e){
+    let link = e.target.href;
+    chrome.tabs.create({url: link});
+}
+
+function deletePage(e){
+    let link = e.target.href;
+    chrome.tabs.create({url: link});
+}
 
 function init() {
 
@@ -114,6 +137,12 @@ function init() {
     });
 
     getAllNotes();
+
+    let pages = document.querySelector('#sites');
+    pages.addEventListener('click', goToPage, false)
+    
+    // let delPage = document.querySelector('#sites');
+    // pages.addEventListener('click', goToPage, false)
 
 }    
 

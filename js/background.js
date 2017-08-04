@@ -43,6 +43,14 @@ function deletedNote(newList){
 }
 
 
+function deletedSite(newList){
+    chrome.storage.sync.get(null, function(result) {
+        result[url] = newList;       
+        chrome.storage.sync.set(result, function() {});
+      });
+}
+
+
 // listener for when you go to a new URL... this is really for debugging. I'll delete this!
 chrome.storage.onChanged.addListener(function(changes, namespace) {
   for (key in changes) {
