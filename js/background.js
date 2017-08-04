@@ -12,7 +12,7 @@ function saveChanges(url, text) {
 const clickHandler = function(e) {
     let url = e.pageUrl;
     let text = e.selectionText;
-    if(text.length >= 10){
+    if(text.length >= 10 && text.length <= 1000){
       saveChanges(url, text)
     }
 };

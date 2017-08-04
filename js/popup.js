@@ -13,7 +13,8 @@ chrome.tabs.query(queryInfo, function(tabs) {
 
             if(result[url]){
                 result[url].forEach(note => {
-                    $("#points ul").append('<li id="' + note + 'note' + '">' + note + '<button> edit </button> <button class="delete" id="' + note + '"> delete </button>' + '</li>');
+                    let noteID = note.replace(/\W+/g, "")
+                    $("#points ul").append('<li id="' + noteID + 'note' + '">' + note + '<button> edit </button> <button class="delete" id="' + note + '"> delete </button>' + '</li>');
                 })
             }
             // $("#pointz ul").append('<li>lol this prob wont work lol</li>')
@@ -30,14 +31,16 @@ function deleteNote(text) {
 
         if(url){
             chrome.storage.sync.get([url], function(result) {      
-
+                console.log(result[url])
                 let first = result[url].slice(0,result[url].indexOf(text));
                 let last = result[url].slice(result[url].indexOf(text)+1);
                 result[url] = [...first, ...last];
 
+                text = text.replace(/\W+/g, "")
                 let id = '#' + text + 'note';
                 console.log(id)
                 $(id).hide();
+
                 let background = chrome.extension.getBackgroundPage();
                 background.deletedNote(result[url]);
 
@@ -45,7 +48,7 @@ function deleteNote(text) {
             });
         }
     });
-}
+}  
 
 
 function getAllNotes(){
