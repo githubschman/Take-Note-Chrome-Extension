@@ -49,7 +49,7 @@ function deleteNote(text) {
 
 
 function getAllNotes(){
-    chrome.storage.sync.get(null, function(result) {   
+    chrome.storage.sync.get(null, function(result) {
         let titles = [], sites = [];
         if(result){
             for(let address in result){
@@ -63,7 +63,7 @@ function getAllNotes(){
                 }
             }
             titles.forEach((title, i) => {
-                $("#sites ul").append('<li id="' + sites[i] + '">' + '<a href=' + sites[i] + '>' + title + '</a> <button class="deleteSite" id="' + title + '"> remove site </button>' + '</li>');
+                $("#sites ul").append('<li id="' + sites[i] + '">' + '<a href=' + sites[i] + '>' + title + '</a> <button class="deleteSite" id="' + sites[i] + '"> remove site </button>' + '</li>');
             })
         }
     });
@@ -74,11 +74,11 @@ function editNote(){
     
 }
 
-function deleteSite(url){   
-    chrome.storage.sync.get(null, function(result) {      
+function deleteSite(url){  
+    chrome.storage.sync.get([url], function(result) {      
         result[url] = null;
         let background = chrome.extension.getBackgroundPage();
-        background.deletedSite(result[url]);
+        background.deletedSite(url);
     });
 }
 
@@ -99,22 +99,19 @@ function editNote(e){
     }
     else if(e.target.outerText === 'edit'){
         editNote(e.target.id);
-    }
-    else if(e.target.outerText === 'remove site'){
-        deleteSite(e.target.href)
-    }
-    
+    }   
 }  
 
-function goToPage(e){
-    let link = e.target.href;
-    chrome.tabs.create({url: link});
+function handleSites(e){
+    let site = e.target.id, link = e.target.href;
+    if(e.target.outerText === 'remove site'){
+        deleteSite(site)
+    }
+    else {
+        chrome.tabs.create({url: link});
+    }
 }
 
-function deletePage(e){
-    let link = e.target.href;
-    chrome.tabs.create({url: link});
-}
 
 function init() {
 
@@ -139,11 +136,7 @@ function init() {
     getAllNotes();
 
     let pages = document.querySelector('#sites');
-    pages.addEventListener('click', goToPage, false)
-    
-    // let delPage = document.querySelector('#sites');
-    // pages.addEventListener('click', goToPage, false)
-
+    pages.addEventListener('click', handleSites, false)
 }    
 
 
