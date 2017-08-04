@@ -15,7 +15,7 @@ chrome.tabs.query(queryInfo, function(tabs) {
                 result[url].forEach(note => {
                     if(note){
                         let noteID = note.replace(/\W+/g, "")
-                        $("#points ul").append('<li id="' + noteID + 'note' + '">' + note + '<button> edit </button> <button class="delete" id="' + note + '"> delete </button>' + '</li>');
+                        $("#points ul").append('<li id="' + noteID + 'note' + '">' + note + '<button id="' + note + '"> edit </button> <button class="delete" id="' + note + '"> delete </button>' + '</li>');
                     }
                 })
             }
@@ -34,11 +34,11 @@ function getAllNotes(){
                 if(result[address]){
                     let com = address.indexOf('.com') < 0 ? address.indexOf('.org') : address.indexOf('.com');
                     if(address.indexOf('www') < 0){
-                        titles.push(address.slice(address.indexOf('//')+2, com))
+                        titles.push(address.slice(address.indexOf('//')+2, com));
                     }else{
-                        titles.push(address.slice(address.indexOf('www')+4, com))
+                        titles.push(address.slice(address.indexOf('www')+4, com));
                     }
-                    sites.push(address)
+                    sites.push(address);
                 }
             }
             titles.forEach((title, i) => {
@@ -76,8 +76,36 @@ function handleSites(e){
 
 
 
-function editNote(){
-    
+function editNote(e){
+    let text = '"' + e + '"';
+    $("#noteInput").val(text);
+    // $("#noteInput").attr('size', text.length);
+    let form = $("#form")
+    $("#form").fadeIn();
+
+    // // delete and remake the note with new value
+
+    //     chrome.tabs.query(queryInfo, function(tabs) {
+
+    //     var tab = tabs[0];
+    //     var url = tab.url;
+
+    //     if(url){
+    //         chrome.storage.sync.get([url], function(result) {      
+    //             let first = result[url].slice(0,result[url].indexOf(text));
+    //             let last = result[url].slice(result[url].indexOf(text)+1);
+    //             result[url] = [...first, ...last];
+
+    //             text = text.replace(/\W+/g, "")
+    //             let id = '#' + text + 'note';
+    //             $(id).hide();
+
+    //             let background = chrome.extension.getBackgroundPage();
+    //             background.deletedNote(result[url]);
+
+    //         });
+    //     }
+    // });
 }
 
 
@@ -129,6 +157,9 @@ function goToSite(e){
     chrome.tabs.create({url: e.target.name});
 }
 
+function submitNewNote(e){
+    console.log('submit!')
+}
 
 function init() {
 
@@ -140,18 +171,24 @@ function init() {
 
     let editSpec = document.querySelector('#editSpec')
     editSpec.addEventListener('click', goToSite, false)
+    
+    // let submitBtn = document.querySelector('#submit')
+    // editSpec.addEventListener('submit', submitNewNote, false)
 
     $("#all").hide();
+    $("#form").hide();
     $("#specific").hide();
 
     $("#showHome").click(function(){
 
+        $("#form").hide();
         $("#single").hide();
         $("#specific").hide();
         $("#all").fadeIn();
     });
 
     $("#showSingle").click(function(){
+        $("#form").hide();
         $("#all").hide();
         $("#specific").hide();
         $("#single").fadeIn();
