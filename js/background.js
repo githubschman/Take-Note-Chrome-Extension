@@ -44,7 +44,6 @@ function deletedNote(newList){
 
 
 function deletedSite(url){
-  console.log(url)
     chrome.storage.sync.get([url], function(result) {
         result[url] = null;       
         chrome.storage.sync.set(result, function() {});

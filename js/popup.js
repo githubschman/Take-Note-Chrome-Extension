@@ -76,8 +76,7 @@ function handleSites(e){
 
 
 
-function editNote(e){
-    let text = '"' + e + '"';
+function editNote(text){ // this just makes the form visible.
     $("#noteInput").val(text);
     // $("#noteInput").attr('size', text.length);
     let form = $("#form")
@@ -158,7 +157,8 @@ function goToSite(e){
 }
 
 function submitNewNote(e){
-    console.log('submit!')
+    e.preventDefault();
+    alert('submit!')
 }
 
 function init() {
@@ -172,8 +172,8 @@ function init() {
     let editSpec = document.querySelector('#editSpec')
     editSpec.addEventListener('click', goToSite, false)
     
-    // let submitBtn = document.querySelector('#submit')
-    // editSpec.addEventListener('submit', submitNewNote, false)
+    document.getElementById("editForm").addEventListener('submit', submitNewNote, false);
+
 
     $("#all").hide();
     $("#form").hide();
