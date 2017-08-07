@@ -142,7 +142,7 @@ function goToSite(e){
     chrome.tabs.create({url: e.target.name});
 }
 
-function submitNewNote(e){ // handle too short text, cancel, submitted
+function submitNewNote(e){
    e.preventDefault(); //
    console.log(tempText)
     let newNote = e.target["0"].value;
@@ -178,6 +178,12 @@ function submitNewNote(e){ // handle too short text, cancel, submitted
     $("#form").hide();
 }
 
+function cancelSubmit(e) {
+    if(e.srcElement.defaultValue === 'Cancel'){
+        $("#form").hide(); 
+    }
+}
+
 function init() {
 
     let dialog = document.querySelector('#dialog');
@@ -185,11 +191,9 @@ function init() {
 
     let notes = document.querySelector('#points');
     notes.addEventListener('click', handleNote, false)
-
-    let editSpec = document.querySelector('#editSpec')
-    editSpec.addEventListener('click', goToSite, false)
     
     document.getElementById("editForm").addEventListener('submit', submitNewNote, false);
+    document.getElementById("editForm").addEventListener('click', cancelSubmit, false);
 
 
     $("#all").hide();
@@ -197,7 +201,6 @@ function init() {
     $("#specific").hide();
 
     $("#showHome").click(function(){
-
         $("#form").hide();
         $("#single").hide();
         $("#specific").hide();
