@@ -21,7 +21,7 @@ chrome.tabs.query(queryInfo, function(tabs) {
                     }
                 })
             }
-            // maybe move this to init?
+            // maybe move this to init? For popping out text!
             // $("#pointz ul").append('<li>lol this prob wont work lol</li>')
         });
     }
@@ -143,28 +143,39 @@ function goToSite(e){
 }
 
 function submitNewNote(e){ // handle too short text, cancel, submitted
-    e.preventDefault(); //
+   e.preventDefault(); //
+   console.log(tempText)
     let newNote = e.target["0"].value;
-    $("#message").text("submitted!");
     
     chrome.tabs.query(queryInfo, function(tabs) {
-
+    
         var tab = tabs[0];
         var url = tab.url;
 
         if(url){
-            console.log('got url')
-            chrome.storage.sync.get([url], function(result) {       
+            
+            chrome.storage.sync.get([url], function(result) {
+                
+                let first = result[url].slice(0,result[url].indexOf(tempText));
+                let last = result[url].slice(result[url].indexOf(tempText)+1);
+                result[url] = [...first, ...last];
+                tempID = tempText.replace(/\W+/g, "")
+                let id = '#' + tempID + 'note';
+                $(id).hide();
+
+                let background = chrome.extension.getBackgroundPage();
+                background.deletedNote(result[url]);
+
                 if(result[url].indexOf(newNote) < 0){
                     result[url].push(newNote);
-                    let noteID = newNote.replace(/\W+/g, "")
+                    let noteID = newNote.replace(/\W+/g, '')
                     $("#points ul").append('<li id="' + noteID + 'note' + '">' + newNote + '<button id="' + newNote + '"> edit </button> <button class="delete" id="' + newNote + '"> delete </button>' + '</li>');
-                    deleteNote(tempText); //
                 }
                 chrome.storage.sync.set(result, function() {});
             });
         }
-    });      
+    });
+    $("#form").hide();
 }
 
 function init() {
