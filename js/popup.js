@@ -5,6 +5,12 @@ currentWindow: true
 
 let tempText = "";
 
+function containsCode(text){
+  let test = 0;
+  text.indexOf('var') > -1 ? test += 3 : test; text.indexOf('const') > -1 ? test += 3 : test; text.indexOf('function') > -1 ? test += 5 : test; text.indexOf('{') > -1 ? test += 4 : test; text.indexOf('}') > -1 ? test += 4 : test; text.indexOf(';') > -1 ? test += 5 : test; text.indexOf('def') > -1 ? test += 3 : test; text.indexOf('<') > -1 ? test += 5 : test; text.indexOf('>') > -1 ? test += 5 : test;
+  return test > 10;
+}
+
 chrome.tabs.query(queryInfo, function(tabs) {
 
     var tab = tabs[0];
@@ -16,8 +22,16 @@ chrome.tabs.query(queryInfo, function(tabs) {
             if(result[url]){
                 result[url].forEach(note => {
                     if(note){
+                        let content;
+                        if(containsCode(note)){
+                            content = '<pre class="prettyprint">' + note + '</pre>'
+                        }else{
+                            content = note;
+                        }
+                        
+                        console.log(content)
                         let noteID = note.replace(/\W+/g, "")
-                        $("#points ul").append('<li id="' + noteID + 'note' + '">' + note + '<button id="' + note + '"> edit </button> <button class="delete" id="' + note + '"> delete </button>' + '</li>');
+                        $("#points ul").append('<li id="' + noteID + 'note' + '">' + content + '<button id="' + note + '"> edit </button> <button class="delete" id="' + note + '"> delete </button>' + '</li>');
                     }
                 })
             }
@@ -194,7 +208,7 @@ function init() {
     
     document.getElementById("editForm").addEventListener('submit', submitNewNote, false);
     document.getElementById("editForm").addEventListener('click', cancelSubmit, false);
-
+    document.body.addEventListener('load', PR.prettyPrint())
 
     $("#all").hide();
     $("#form").hide();

@@ -2,12 +2,11 @@ function saveChanges(url, text) {
     chrome.storage.sync.get([url], function(result) {       
         result[url] = result[url] ? result[url] : []
         if(result[url].indexOf(text) < 0){
-          result[url].push(text); // no dupes
+            result[url].push(text); // no dupes
         }
         chrome.storage.sync.set(result, function() {});
       });
 }
-
       
 const clickHandler = function(e) {
     let url = e.pageUrl;
