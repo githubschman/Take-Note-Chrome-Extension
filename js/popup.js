@@ -22,16 +22,18 @@ chrome.tabs.query(queryInfo, function(tabs) {
             if(result[url]){
                 result[url].forEach(note => {
                     if(note){
-                        let content;
+                        let content, edit;
                         if(containsCode(note)){
+                            edit = ""
                             content = '<pre class="prettyprint">' + note + '</pre>'
                         }else{
+                            edit = '<button id="' + note + '"> edit </button>' 
                             content = note;
                         }
-                        
+
                         console.log(content)
                         let noteID = note.replace(/\W+/g, "")
-                        $("#points ul").append('<li id="' + noteID + 'note' + '">' + content + '<button id="' + note + '"> edit </button> <button class="delete" id="' + note + '"> delete </button>' + '</li>');
+                        $("#points ul").append('<li id="' + noteID + 'note' + '">' + content + edit + '<button class="delete" id="' + note + '"> delete </button>' + '</li>');
                     }
                 })
             }
@@ -205,6 +207,9 @@ function init() {
 
     let notes = document.querySelector('#points');
     notes.addEventListener('click', handleNote, false)
+
+    let editSpec = document.querySelector('#editSpec');
+    editSpec.addEventListener('click', goToSite, false);
     
     document.getElementById("editForm").addEventListener('submit', submitNewNote, false);
     document.getElementById("editForm").addEventListener('click', cancelSubmit, false);
