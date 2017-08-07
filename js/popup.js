@@ -3,6 +3,8 @@ active: true,
 currentWindow: true
 };
 
+let tempText = "";
+
 chrome.tabs.query(queryInfo, function(tabs) {
 
     var tab = tabs[0];
@@ -25,19 +27,29 @@ chrome.tabs.query(queryInfo, function(tabs) {
     }
 })  
 
+function formatAddress(address) {
+    let com = address.indexOf('.com') < 0 ? address.indexOf('.org') : address.indexOf('.com');
+
+    if(address.indexOf('//') > -1 && address.indexOf('www') < 0){
+        address = address.slice(address.indexOf('//')+2, com);
+    }else if(address.indexOf('www')){
+        address = address.slice(address.indexOf('www')+4, com);
+    }
+    else{
+        address = address.slice(address.indexOf(0, com));
+    }
+    return address;
+}
+
 
 function getAllNotes(){
     chrome.storage.sync.get(null, function(result) {
         let titles = [], sites = [];
         if(result){
             for(let address in result){
-                if(result[address]){
-                    let com = address.indexOf('.com') < 0 ? address.indexOf('.org') : address.indexOf('.com');
-                    if(address.indexOf('www') < 0){
-                        titles.push(address.slice(address.indexOf('//')+2, com));
-                    }else{
-                        titles.push(address.slice(address.indexOf('www')+4, com));
-                    }
+                if(result[address]){ 
+                    let formatted = formatAddress(address)
+                    titles.push(formatted)
                     sites.push(address);
                 }
             }
@@ -52,6 +64,7 @@ function getAllNotes(){
 /// EVENT HANDLERS
 function handleSites(e){
     let site = e.target.id, url = e.target.href;
+ 
     if(e.target.outerText === 'remove site'){
         deleteSite(site)
     }
@@ -59,7 +72,7 @@ function handleSites(e){
         $("#single").hide();
         $("#all").hide();
         $("#specific").fadeIn();
-        $("#spec").text(url);
+        $("#spec").text(formatAddress(url));
         $("#specificPoints ul").empty()
         let editSpec = document.querySelector('#editSpec')
         editSpec.name = url;
@@ -74,37 +87,11 @@ function handleSites(e){
 }
 
 
-
-
 function editNote(text){ // this just makes the form visible.
     $("#noteInput").val(text);
-    // $("#noteInput").attr('size', text.length);
-    let form = $("#form")
+    let form = $("#form");
     $("#form").fadeIn();
-
-    // // delete and remake the note with new value
-
-    //     chrome.tabs.query(queryInfo, function(tabs) {
-
-    //     var tab = tabs[0];
-    //     var url = tab.url;
-
-    //     if(url){
-    //         chrome.storage.sync.get([url], function(result) {      
-    //             let first = result[url].slice(0,result[url].indexOf(text));
-    //             let last = result[url].slice(result[url].indexOf(text)+1);
-    //             result[url] = [...first, ...last];
-
-    //             text = text.replace(/\W+/g, "")
-    //             let id = '#' + text + 'note';
-    //             $(id).hide();
-
-    //             let background = chrome.extension.getBackgroundPage();
-    //             background.deletedNote(result[url]);
-
-    //         });
-    //     }
-    // });
+    tempText = text; // caches text to be deleted
 }
 
 
@@ -119,7 +106,6 @@ function deleteNote(text) {
                 let first = result[url].slice(0,result[url].indexOf(text));
                 let last = result[url].slice(result[url].indexOf(text)+1);
                 result[url] = [...first, ...last];
-
                 text = text.replace(/\W+/g, "")
                 let id = '#' + text + 'note';
                 $(id).hide();
@@ -135,7 +121,7 @@ function deleteNote(text) {
 
 function deleteSite(url){
     chrome.storage.sync.get([url], function(result) { 
-        let theClass = "." + url.replace(/\W+/g, "")
+        let theClass = "." + url.replace(/\W+/g, "");
         $(theClass).hide();     
         result[url] = null;
         let background = chrome.extension.getBackgroundPage();
@@ -156,9 +142,29 @@ function goToSite(e){
     chrome.tabs.create({url: e.target.name});
 }
 
-function submitNewNote(e){
-    e.preventDefault();
-    alert('submit!')
+function submitNewNote(e){ // handle too short text, cancel, submitted
+    e.preventDefault(); //
+    let newNote = e.target["0"].value;
+    $("#message").text("submitted!");
+    
+    chrome.tabs.query(queryInfo, function(tabs) {
+
+        var tab = tabs[0];
+        var url = tab.url;
+
+        if(url){
+            console.log('got url')
+            chrome.storage.sync.get([url], function(result) {       
+                if(result[url].indexOf(newNote) < 0){
+                    result[url].push(newNote);
+                    let noteID = newNote.replace(/\W+/g, "")
+                    $("#points ul").append('<li id="' + noteID + 'note' + '">' + newNote + '<button id="' + newNote + '"> edit </button> <button class="delete" id="' + newNote + '"> delete </button>' + '</li>');
+                    deleteNote(tempText); //
+                }
+                chrome.storage.sync.set(result, function() {});
+            });
+        }
+    });      
 }
 
 function init() {
