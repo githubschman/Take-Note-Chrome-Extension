@@ -1,13 +1,34 @@
+let codify = window.js_beautify;
+
 let queryInfo = {
 active: true,
 currentWindow: true
 };
 
+let options = {
+    "indent_size": 4,
+    "html": {
+        "end_with_newline": true,
+        "js": {
+            "indent_size": 2
+        },
+        "css": {
+            "indent_size": 2
+        }
+    },
+    "css": {
+        "indent_size": 1
+    },
+    "js": {
+       "preserve-newlines": true
+    }
+}
+
 let tempText = "";
 
 function containsCode(text){
   let test = 0;
-  text.indexOf('var') > -1 ? test += 3 : test; text.indexOf('const') > -1 ? test += 3 : test; text.indexOf('function') > -1 ? test += 5 : test; text.indexOf('{') > -1 ? test += 4 : test; text.indexOf('}') > -1 ? test += 4 : test; text.indexOf(';') > -1 ? test += 5 : test; text.indexOf('def') > -1 ? test += 3 : test; text.indexOf('<') > -1 ? test += 5 : test; text.indexOf('>') > -1 ? test += 5 : test;
+  text.indexOf('var') > -1 ? test += 3 : test; text.indexOf('//') > -1 ? test += 7 : test; text.indexOf('const') > -1 ? test += 3 : test; text.indexOf('function') > -1 ? test += 5 : test; text.indexOf('{') > -1 ? test += 4 : test; text.indexOf('}') > -1 ? test += 4 : test; text.indexOf(';') > -1 ? test += 5 : test; text.indexOf('def') > -1 ? test += 3 : test; text.indexOf('<') > -1 ? test += 5 : test; text.indexOf('>') > -1 ? test += 5 : test; text.indexOf('=') > -1 ? test += 4 : test;
   return test > 10;
 }
 
@@ -15,7 +36,9 @@ chrome.tabs.query(queryInfo, function(tabs) {
 
     var tab = tabs[0];
     var url = tab.url;
-
+    let testCode = codify("function(arr){for(var i = 0; i < arr.length; i++) {console.log('arr[i]')} return false}");
+    console.log(testCode)
+    
     if(url){
         chrome.storage.sync.get([url], function(result) {   
 
@@ -25,20 +48,22 @@ chrome.tabs.query(queryInfo, function(tabs) {
                         let content, edit;
                         if(containsCode(note)){
                             edit = ""
-                            content = '<pre class="prettyprint">' + note + '</pre>'
-                        }else{
+                            content = codify(note);
+                            console.log(content)
+                            $("#points ul").append('<pre class="prettyprint">' + content + '</pre>')
+                            // content = '<pre class="prettyprint">' + note + '</pre>'
+                        } else {
                             edit = '<button id="' + note + '"> edit </button>' 
                             content = note;
                         }
 
-                        console.log(content)
                         let noteID = note.replace(/\W+/g, "")
                         $("#points ul").append('<li id="' + noteID + 'note' + '">' + content + edit + '<button class="delete" id="' + note + '"> delete </button>' + '</li>');
                     }
                 })
             }
-            // maybe move this to init? For popping out text!
-            // $("#pointz ul").append('<li>lol this prob wont work lol</li>')
+        // maybe move this to init? For popping out text!
+        // $("#pointz ul").append('<li>lol this prob wont work lol</li>')
         });
     }
 })  
