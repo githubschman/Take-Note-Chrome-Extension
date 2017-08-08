@@ -36,8 +36,6 @@ chrome.tabs.query(queryInfo, function(tabs) {
 
     var tab = tabs[0];
     var url = tab.url;
-    let testCode = codify("function(arr){for(var i = 0; i < arr.length; i++) {console.log('arr[i]')} return false}");
-    console.log(testCode)
     
     if(url){
         chrome.storage.sync.get([url], function(result) {   
@@ -45,20 +43,17 @@ chrome.tabs.query(queryInfo, function(tabs) {
             if(result[url]){
                 result[url].forEach(note => {
                     if(note){
-                        let content, edit;
+                        let content, edit, noteID = note.replace(/\W+/g, "");
                         if(containsCode(note)){
                             edit = ""
                             content = codify(note);
-                            console.log(content)
-                            $("#points ul").append('<pre class="prettyprint">' + content + '</pre>')
-                            // content = '<pre class="prettyprint">' + note + '</pre>'
+                            $("#points ul").append('<pre class="prettyprint" id="' + noteID + 'note">' + content + '</pre><button name="' + noteID + '" class="delete" id="' + note + '"> delete </button>');
                         } else {
                             edit = '<button id="' + note + '"> edit </button>' 
                             content = note;
-                        }
+                            $("#points ul").append('<li id="' + noteID + 'note">' + content + edit + '<button class="delete" id="' + note + '"> delete </button>' + '</li>');
 
-                        let noteID = note.replace(/\W+/g, "")
-                        $("#points ul").append('<li id="' + noteID + 'note' + '">' + content + edit + '<button class="delete" id="' + note + '"> delete </button>' + '</li>');
+                        }
                     }
                 })
             }
@@ -118,7 +113,7 @@ function handleSites(e){
         let editSpec = document.querySelector('#editSpec')
         editSpec.name = url;
         chrome.storage.sync.get([url], function(result) {  
-        result[url].forEach(note => {
+        result[url].forEach(note => { //codify
                 let noteID = note.replace(/\W+/g, "")
                     $("#specificPoints ul").append('<li id="' + noteID + 'note' + '">' + note + '</li>');
                 })
@@ -144,12 +139,15 @@ function deleteNote(text) {
 
         if(url){
             chrome.storage.sync.get([url], function(result) {      
-                let first = result[url].slice(0,result[url].indexOf(text));
-                let last = result[url].slice(result[url].indexOf(text)+1);
-                result[url] = [...first, ...last];
+                let first = result[url].slice(0,result[url].indexOf(text)); // works
+                let last = result[url].slice(result[url].indexOf(text)+1); // works
+                result[url] = [...first, ...last]; // works
+                console.log('text before: ', text)
                 text = text.replace(/\W+/g, "")
                 let id = '#' + text + 'note';
+
                 $(id).hide();
+                $("button[name='"+ text + "']").hide();
 
                 let background = chrome.extension.getBackgroundPage();
                 background.deletedNote(result[url]);
@@ -184,8 +182,7 @@ function goToSite(e){
 }
 
 function submitNewNote(e){
-   e.preventDefault(); //
-   console.log(tempText)
+    e.preventDefault(); //
     let newNote = e.target["0"].value;
     
     chrome.tabs.query(queryInfo, function(tabs) {
