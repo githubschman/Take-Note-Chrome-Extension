@@ -238,8 +238,7 @@ function init() {
     getAllNotes();
 
     let pages = document.querySelector('#sites');
-    pages.addEventListener('click', handleSites, false)
+    pages.addEventListener('click', handleSites, false);
 }   
-
 
 document.addEventListener('DOMContentLoaded', init);

@@ -12,7 +12,9 @@
   <body>
 
     <div id="single">
-      <h1> Notes for the page you're on! </h1>
+      <div class="title">
+        <h1> Current Page </h1>
+      </div>
     <div id="points" style="text-align: left;">
       <ul>
       </ul>
@@ -20,7 +22,9 @@
      </div>
 
     <div id="all">
-      <h1> hello here are all of your notes! </h1>
+      <div class="title">
+        <h1> All Notes </h1>
+      </div>  
       <div id="sites" style="text-align: left;">
       <ul>
       </ul>
@@ -28,11 +32,13 @@
     </div>
 
     <div id="specific">
-      <h1 id="spec"></h1>
+      <div class="title">
+        <h1 id="spec"></h1>
+        <button id="editSpec">edit notes</button>
+      </div>  
       <div id="specificPoints" style="text-align: left;">
       <ul id="pt">
       </ul>
-      <button id="editSpec">edit notes</button>
     </div>
     </div>
 
@@ -45,8 +51,10 @@
       </form>
     </div>
 
-    <button id="showSingle"> see current page notes </button>
-    <button id="showHome"> see all notes </button>
+    <div class="nav">
+      <button id="showSingle"> see current page notes </button>
+      <button id="showHome"> see all notes </button>
+    </div>
    
   </body>
 </html>
