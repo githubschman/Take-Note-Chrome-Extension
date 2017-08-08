@@ -5,25 +5,6 @@ active: true,
 currentWindow: true
 };
 
-let options = {
-    "indent_size": 4,
-    "html": {
-        "end_with_newline": true,
-        "js": {
-            "indent_size": 2
-        },
-        "css": {
-            "indent_size": 2
-        }
-    },
-    "css": {
-        "indent_size": 1
-    },
-    "js": {
-       "preserve-newlines": true
-    }
-}
-
 let tempText = "";
 
 function containsCode(text){
@@ -45,7 +26,6 @@ chrome.tabs.query(queryInfo, function(tabs) {
                     if(note){
                         let content, edit, noteID = note.replace(/\W+/g, "");
                         if(containsCode(note)){
-                            edit = ""
                             content = codify(note);
                             $("#points ul").append('<pre class="prettyprint" id="' + noteID + 'note">' + content + '</pre><button name="' + noteID + '" class="delete" id="' + note + '"> delete </button>');
                         } else {
@@ -57,8 +37,6 @@ chrome.tabs.query(queryInfo, function(tabs) {
                     }
                 })
             }
-        // maybe move this to init? For popping out text!
-        // $("#pointz ul").append('<li>lol this prob wont work lol</li>')
         });
     }
 })  
@@ -113,9 +91,14 @@ function handleSites(e){
         let editSpec = document.querySelector('#editSpec')
         editSpec.name = url;
         chrome.storage.sync.get([url], function(result) {  
-        result[url].forEach(note => { //codify
+        result[url].forEach(note => {
                 let noteID = note.replace(/\W+/g, "")
-                    $("#specificPoints ul").append('<li id="' + noteID + 'note' + '">' + note + '</li>');
+                    if(containsCode(note)){
+                         let content = codify(note);
+                         $("#specificPoints ul").append('<pre class="prettyprint" id="' + noteID + 'note">' + content + '</pre>');
+                    }else{
+                        $("#specificPoints ul").append('<li id="' + noteID + 'note' + '">' + note + '</li>');
+                    }
                 })
         });
         
@@ -224,9 +207,6 @@ function cancelSubmit(e) {
 
 function init() {
 
-    let dialog = document.querySelector('#dialog');
-    dialog.addEventListener('click', showDialog, false);
-
     let notes = document.querySelector('#points');
     notes.addEventListener('click', handleNote, false)
 
@@ -260,16 +240,6 @@ function init() {
     let pages = document.querySelector('#sites');
     pages.addEventListener('click', handleSites, false)
 }   
-
-// pop out your notes??
-function showDialog(){
-    chrome.windows.create({
-        url: 'dialog.html',
-        width: 200,
-        height: 120,
-        type: 'popup'
-    });
-}  
 
 
 document.addEventListener('DOMContentLoaded', init);
