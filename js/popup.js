@@ -27,11 +27,11 @@ chrome.tabs.query(queryInfo, function(tabs) {
                         let content, edit, noteID = note.replace(/\W+/g, "");
                         if(containsCode(note)){
                             content = codify(note);
-                            $("#points ul").append('<pre class="prettyprint" id="' + noteID + 'note">' + content + '</pre><button name="' + noteID + '" class="delete" id="' + note + '"> delete </button>');
+                            $("#points ul").append('<pre class="code" id="' + noteID + 'note">' + content + '</pre><button name="' + noteID + '" class="delete" id="' + note + '"> delete </button>');
                         } else {
                             edit = '<button id="' + note + '"> edit </button>' 
                             content = note;
-                            $("#points ul").append('<li id="' + noteID + 'note">' + content + edit + '<button class="delete" id="' + note + '"> delete </button>' + '</li>');
+                            $("#points ul").append('<li class="textback" id="' + noteID + 'note">' + content + edit + '<button class="delete" id="' + note + '"> delete </button>' + '</li>');
 
                         }
                     }
@@ -95,9 +95,9 @@ function handleSites(e){
                 let noteID = note.replace(/\W+/g, "")
                     if(containsCode(note)){
                          let content = codify(note);
-                         $("#specificPoints ul").append('<pre class="prettyprint" id="' + noteID + 'note">' + content + '</pre>');
+                         $("#specificPoints ul").append('<pre class="code" id="' + noteID + 'note">' + content + '</pre>');
                     }else{
-                        $("#specificPoints ul").append('<li id="' + noteID + 'note' + '">' + note + '</li>');
+                        $("#specificPoints ul").append('<li class="textback" id="' + noteID + 'note' + '">' + note + '</li>');
                     }
                 })
         });
