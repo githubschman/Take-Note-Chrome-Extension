@@ -99,7 +99,7 @@ function handleSites(e){
 
         chrome.storage.sync.get([url], function(result) {
 
-        !result[url].length ? $("#placeholder").fadeIn() : $("#placeholder").hide() 
+        !result[url].length ? $("#placeholder2").fadeIn() : $("#placeholder2").hide() 
 
         result[url].forEach(note => {
                 let noteID = note.replace(/\W+/g, "")
@@ -132,9 +132,7 @@ function deleteNote(text) {
 
         if(url){
             chrome.storage.sync.get([url], function(result) {
-                
-                  
-                
+
                 let first = result[url].slice(0,result[url].indexOf(text)); // works
                 let last = result[url].slice(result[url].indexOf(text)+1); // works
                 result[url] = [...first, ...last]; // works
@@ -145,7 +143,7 @@ function deleteNote(text) {
                 $(id).hide();
                 $("button[name='"+ text + "']").hide();
                 !result[url].length ? $("#placeholder").fadeIn() : $("#placeholder").hide()    
-                
+
                 let background = chrome.extension.getBackgroundPage();
                 background.deletedNote(result[url]);
 
