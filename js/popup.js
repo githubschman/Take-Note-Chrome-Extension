@@ -19,15 +19,20 @@ chrome.tabs.query(queryInfo, function(tabs) {
     var url = tab.url;
     
     if(url){
-        chrome.storage.sync.get([url], function(result) {   
+        chrome.storage.sync.get([url], function(result) { 
+            
+            !result[url].length ? $("#placeholder").fadeIn() : $("#placeholder").hide()
 
             if(result[url]){
+
+                $("#current").text(formatAddress(url));
+                 
                 result[url].forEach(note => {
                     if(note){
                         let content, edit, noteID = note.replace(/\W+/g, "");
                         if(containsCode(note)){
                             content = codify(note);
-                            $("#points ul").append('<pre class="code" id="' + noteID + 'note">' + content + '</pre><button name="' + noteID + '" class="delete" id="' + note + '"> delete </button>');
+                            $("#points ul").append('<pre class="code" id="' + noteID + 'note">' + content + '</pre><button name="' + noteID + '" class = "delete" id = "' + note + '"> delete </button>');
                         } else {
                             edit = '<button id="' + note + '"> edit </button>' 
                             content = note;
@@ -57,6 +62,7 @@ function formatAddress(address) {
 
 
 function getAllNotes(){
+
     chrome.storage.sync.get(null, function(result) {
         let titles = [], sites = [];
         if(result){
@@ -69,7 +75,7 @@ function getAllNotes(){
             }
             titles.forEach((title, i) => {
                 let siteClass = sites[i].replace(/\W+/g, "");
-                $("#sites ul").append('<li id="' + sites[i] + '" class =' +  siteClass + '>' + '<a href=' + sites[i] + '>' + title + '</a> <button class="deleteSite" id="' + sites[i] + '"> remove site </button>' + '</li>');
+                $("#sites ul").append('<li id="' + sites[i] + '" class =' +  siteClass + '>' + '<a href=' + sites[i] + '>' + title + '</a> <button class="deleteSite" id="' + sites[i] + '"> X </button>' + '</li>');
             })
         }
     });
@@ -78,8 +84,8 @@ function getAllNotes(){
 /// EVENT HANDLERS
 function handleSites(e){
     let site = e.target.id, url = e.target.href;
- 
-    if(e.target.outerText === 'remove site'){
+
+    if(e.target.outerText === 'X'){
         deleteSite(site)
     }
     else { //SPECIFIC SITE
@@ -90,7 +96,11 @@ function handleSites(e){
         $("#specificPoints ul").empty()
         let editSpec = document.querySelector('#editSpec')
         editSpec.name = url;
-        chrome.storage.sync.get([url], function(result) {  
+
+        chrome.storage.sync.get([url], function(result) {
+
+        !result[url].length ? $("#placeholder").fadeIn() : $("#placeholder").hide() 
+
         result[url].forEach(note => {
                 let noteID = note.replace(/\W+/g, "")
                     if(containsCode(note)){
@@ -121,7 +131,10 @@ function deleteNote(text) {
         var url = tab.url;
 
         if(url){
-            chrome.storage.sync.get([url], function(result) {      
+            chrome.storage.sync.get([url], function(result) {
+                
+                  
+                
                 let first = result[url].slice(0,result[url].indexOf(text)); // works
                 let last = result[url].slice(result[url].indexOf(text)+1); // works
                 result[url] = [...first, ...last]; // works
@@ -131,7 +144,8 @@ function deleteNote(text) {
 
                 $(id).hide();
                 $("button[name='"+ text + "']").hide();
-
+                !result[url].length ? $("#placeholder").fadeIn() : $("#placeholder").hide()    
+                
                 let background = chrome.extension.getBackgroundPage();
                 background.deletedNote(result[url]);
 
@@ -151,8 +165,8 @@ function deleteSite(url){
     });
 }
 
-function handleNote(e){
-    if(e.target.outerText === 'delete'){
+function handleNote(e){ //////
+    if(e.target.className === 'delete'){
         deleteNote(e.target.id);
     }
     else if(e.target.outerText === 'edit'){

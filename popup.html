@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Your Notes</title>
+    <title>Take Note</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" type="text/css" href="js/prettify/prettify.css">
     <script type="text/javascript" src="js/beautify.js"></script>
@@ -13,9 +13,10 @@
 
     <div id="single">
       <div class="title">
-        <h1> Current Page </h1>
+        <h1 id="current">Take Some Notes!</h1>
       </div>
     <div id="points" style="text-align: left;">
+          <p id="placeholder" style="text-align: center;">Take some notes!</p>
       <ul class="codeback">
       </ul>
     </div>
@@ -23,7 +24,7 @@
 
     <div id="all">
       <div class="title">
-        <h1> All Notes </h1>
+        <h1> Your Saved Notes </h1>
       </div>  
       <div id="sites" style="text-align: left;">
       <ul>
@@ -33,10 +34,11 @@
 
     <div id="specific">
       <div class="title">
-        <h1 id="spec"></h1>
-        <button class="btn1" id="editSpec">edit notes</button>
+        <h1 id="spec"></h1> &nbsp; &nbsp; 
+        <img src="/images/edit.png" id="editSpec" />
       </div>  
       <div id="specificPoints" style="text-align: left;">
+          <p id="placeholder" style="text-align: center;">Take some notes!</p>
         <ul class="codeback" id="pt">
         </ul>
       </div>
@@ -51,10 +53,15 @@
       </form>
     </div>
 
-    <div class="nav">
-      <button class="btn1" id="showSingle"> see current page notes </button>
-      <button class="btn1" id="showHome"> see all notes </button>
-    </div>
+
+    <section class="footer">
+      <div class="one">
+          <button class="btn1" id="showHome"></button>
+      </div>
+      <div class="two">
+          <button class="btn2" id="showSingle"></button>
+      </div>
+    </section>
    
   </body>
 </html>

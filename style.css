@@ -1,9 +1,32 @@
 @import url('https://fonts.googleapis.com/css?family=Lato:300,400');
-@import url('https://fonts.googleapis.com/css?family=Roboto+Slab');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab:300,400');
 
 h1 {
   font-family: "Lato";
+  color: #085254;
 }
+
+a:link {
+  font-family: "Lato";
+  font-size: 26px;
+  color: #0D8387;
+  text-decoration: none;
+}
+
+a:visited {
+  font-family: "Lato";
+  font-size: 26px;
+  color: #0D8387;
+  text-decoration: none;
+}
+
+a:hover {
+  font-family: "Lato";
+  font-size: 26px;
+  color: #54D0D3;
+  text-decoration: none;
+}
+
 p{
   font-family: "Lato";
   font-weight: 300;
@@ -11,14 +34,6 @@ p{
 body {
   min-width:357px;
   overflow-x:hidden;
-}
-
-img {
-  margin:5px;
-  border:2px solid black;
-  vertical-align:middle;
-  width:75px;
-  height:75px;
 }
 
 #chrome-ext-mark img {
@@ -38,7 +53,6 @@ img {
 }
 
 li {
-  border-top: 1px solid rgb(238, 238, 238); 
   font-family: "Lato";
   font-weight: 300;
   font-size: 16px;
@@ -57,51 +71,74 @@ input {
   height: 60px; display: flex; justify-content: center; align-items: center; background-color: rgb(254, 255, 255); border-bottom: 1px solid rgb(238, 238, 238); box-shadow: rgba(0, 0, 0, 0.02) 0px 2px 6px 0px; border-top-left-radius: 4px; border-top-right-radius: 4px; position: relative;
 }
 
-.nav {
-  width: 100%; height: 30px;  background-color: rgb(254, 255, 255); border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;
+.footer {
+  width: 100%; height: 30px; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; margin: auto; padding: 10px; text-align: center;
+}
+
+.one {
+    width: 30%;
+    float: left;
+}
+.two {
+    margin-left: 40%;
 }
 
 .code{
-  width: 100%; background-color: #053436; color: #FCFBFF; font-family: "Roboto Slab", serif; font-size: 12px;
+  width: 100%; background-color: #053436; color: #FCFBFF; font-family: "Roboto Slab", serif; font-size: 14px; font-weight:300; 
 }
 
 .codeback{
-  background-color: #053436;
+  background-color: #fff;
+  padding: 10px;
 }
+
 .textback{
   background-color: #fff;
 }
 
 .btn1 {
-  display: flex;
-  overflow: hidden;
+  background-image: url("images/2.png");
+  background-color: #fff;
+  width: 40px;
+  height: 40px;
+  border: none;
+  outline: none;
+  align-content: center;
+}
 
-  margin: 10px;
-  padding: 12px 12px;
+.btn1:hover {
+  background-image: url("images/1.png");
+  background-color: #fff;
+}
 
-  cursor: pointer;
-  user-select: none;
-  transition: all 60ms ease-in-out;
-  text-align: center;
-  white-space: nowrap;
-  text-decoration: none !important;
-  text-transform: none;
-  text-transform: capitalize;
+.btn2 {
+  background-image: url("images/4.png");
+  background-color: #fff;
+  width: 40px;
+  height: 40px;
+  border: none;
+  outline: none;
+  align-content: center;
+}
 
+.btn2:hover {
+  background-image: url("images/3.png");
+  background-color: #fff;
+}
+
+.deleteSite {
   color: #fff;
   border: 0 none;
-  border-radius: 4px;
-
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.3;
-
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  justify-content: center;
-  align-items: center;
-  flex: 0 0 160px;
-
-  box-shadow: 2px 5px 10px rgba(#000, .1);
+  border-radius: 5px;
 }
+
+.deleteSite:hover {
+  color: #8e8e8e;
+  border: 0 none;
+  border-radius: 5px;
+}
+
+::selection {
+    background: #54D0D3;
+    color: white;
+  }
