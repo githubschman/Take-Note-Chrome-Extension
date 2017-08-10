@@ -67,6 +67,10 @@ input {
   list-style: none;
 }
 
+#all{
+    border-bottom: 1px solid #F2F2F2;
+}
+
 .title {
   height: 60px; display: flex; justify-content: center; align-items: center; background-color: rgb(254, 255, 255); border-bottom: 1px solid rgb(238, 238, 238); box-shadow: rgba(0, 0, 0, 0.02) 0px 2px 6px 0px; border-top-left-radius: 4px; border-top-right-radius: 4px; position: relative;
 }
@@ -80,11 +84,11 @@ input {
     float: left;
 }
 .two {
-    margin-left: 40%;
+    margin-left: 50%;
 }
 
 .code{
-  width: 100%; background-color: #053436; color: #FCFBFF; font-family: "Roboto Slab", serif; font-size: 14px; font-weight:300; 
+  width: 100%; background-color: #053436; color: #FCFBFF; font-family: "Roboto Slab", serif; font-size: 14px; font-weight:300; padding: 20px;
 }
 
 .codeback{
@@ -94,6 +98,8 @@ input {
 
 .textback{
   background-color: #fff;
+  padding: 10px;
+  border-bottom: 1px solid #F2F2F2;
 }
 
 .btn1 {
@@ -129,16 +135,32 @@ input {
 .deleteSite {
   color: #fff;
   border: 0 none;
-  border-radius: 5px;
+  border-radius: 8px;
 }
 
 .deleteSite:hover {
   color: #8e8e8e;
   border: 0 none;
-  border-radius: 5px;
+  border-radius: 8px;
 }
 
 ::selection {
     background: #54D0D3;
     color: white;
-  }
+}
+
+textarea {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: none;
+    background-color: #0D8387;
+    color: white;
+    border: none;
+    outline: none;
+    word-break: keep-all;
+    font-family: "Lato";
+    font-weight: 300;
+    font-size: 14px;
+}

@@ -36,7 +36,7 @@ chrome.tabs.query(queryInfo, function(tabs) {
                         } else {
                             edit = '<button id="' + note + '"> edit </button>' 
                             content = note;
-                            $("#points ul").append('<li class="textback" id="' + noteID + 'note">' + content + edit + '<button class="delete" id="' + note + '"> delete </button>' + '</li>');
+                            $("#points ul").append('<li class="textback" id="' + noteID + 'note">' + content + "<br>" + edit + '<button class="delete" id="' + note + '"> delete </button>' + '</li>');
 
                         }
                     }
@@ -75,7 +75,7 @@ function getAllNotes(){
             }
             titles.forEach((title, i) => {
                 let siteClass = sites[i].replace(/\W+/g, "");
-                $("#sites ul").append('<li id="' + sites[i] + '" class =' +  siteClass + '>' + '<a href=' + sites[i] + '>' + title + '</a> <button class="deleteSite" id="' + sites[i] + '"> X </button>' + '</li>');
+                $("#sites ul").append('<li id="' + sites[i] + '" class =' +  siteClass + '>' + '<a href=' + sites[i] + '>' + title + '</a> &nbsp <button class="deleteSite" id="' + sites[i] + '"> X </button>' + '</li>');
             })
         }
     });
@@ -116,7 +116,7 @@ function handleSites(e){
 }
 
 
-function editNote(text){ // this just makes the form visible.
+function editNote(text){ // makes the form visible.
     $("#noteInput").val(text);
     let form = $("#form");
     $("#form").fadeIn();
@@ -202,7 +202,7 @@ function submitNewNote(e){
                 if(result[url].indexOf(newNote) < 0){
                     result[url].push(newNote);
                     let noteID = newNote.replace(/\W+/g, '')
-                    $("#points ul").append('<li id="' + noteID + 'note' + '">' + newNote + '<button id="' + newNote + '"> edit </button> <button class="delete" id="' + newNote + '"> delete </button>' + '</li>');
+                    $("#points ul").append('<li id="' + noteID + 'note' + '">' + newNote + ' <br> <button id="' + newNote + '"> edit </button> <button class="delete" id="' + newNote + '"> delete </button>' + '</li>');
                 }
                 chrome.storage.sync.set(result, function() {});
             });
