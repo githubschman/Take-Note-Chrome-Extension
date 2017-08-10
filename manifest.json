@@ -1,11 +1,11 @@
 {
     "name": "Take Note",
-    "description": "Saves text on a site in bullet point format",
+    "description": "An extension to help you take notes on long articles in your browser. Recognizes and formats code.",
     "background": {
         "scripts":  ["js/jquery-3.2.1.js","js/background.js"],
         "css":["style.css"]
     },
-    "version": "1.0",
+    "version": "0.0.0.1",
     "manifest_version": 2,
     "browser_action": {
         "default_popup": "popup.html",

@@ -28,7 +28,7 @@
  JS Beautifier
 ---------------
 
-
+ .... 
   Written by Einar Lielmanis, <einar@jsbeautifier.org>
       http://jsbeautifier.org/
 
