@@ -27,16 +27,16 @@ chrome.tabs.query(queryInfo, function(tabs) {
 
                 $("#current").text(formatAddress(url));
                  
-                result[url].forEach(note => {
+                result[url].forEach(note => { // CURRENT PAGE NOTES
                     if(note){
                         let content, edit, noteID = note.replace(/\W+/g, "");
                         if(containsCode(note)){
                             content = codify(note);
-                            $("#points ul").append('<pre class="code" id="' + noteID + 'note">' + content + '</pre><button name="' + noteID + '" class = "delete" id = "' + note + '"> delete </button>');
+                            $("#points ul").append('<pre class="code" id="' + noteID + 'note">' + content + '</pre><button name="' + noteID + '" class = "delete" id = "' + note + '"> x </button>');
                         } else {
-                            edit = '<button id="' + note + '"> edit </button>' 
+                            edit = '<button class="edit" id="' + note + '"> edit </button>' 
                             content = note;
-                            $("#points ul").append('<li class="textback" id="' + noteID + 'note">' + content + "<br>" + edit + '<button class="delete" id="' + note + '"> delete </button>' + '</li>');
+                            $("#points ul").append('<li class="textback" id="' + noteID + 'note">' + content + "<br>" + edit + '<button class="delete" id="' + note + '"> x </button>' + '</li>');
 
                         }
                     }
@@ -88,7 +88,7 @@ function handleSites(e){
     if(e.target.outerText === 'X'){
         deleteSite(site)
     }
-    else { //SPECIFIC SITE
+    else { // GET A SPECIFIC SITE'S NOTES NOT EDITABLE 
         $("#single").hide();
         $("#all").hide();
         $("#specific").fadeIn();
@@ -136,7 +136,6 @@ function deleteNote(text) {
                 let first = result[url].slice(0,result[url].indexOf(text)); // works
                 let last = result[url].slice(result[url].indexOf(text)+1); // works
                 result[url] = [...first, ...last]; // works
-                console.log('text before: ', text)
                 text = text.replace(/\W+/g, "")
                 let id = '#' + text + 'note';
 
@@ -176,6 +175,8 @@ function goToSite(e){
     chrome.tabs.create({url: e.target.name});
 }
 
+
+//// SUBMIT NEW NOTES
 function submitNewNote(e){
     e.preventDefault(); //
     let newNote = e.target["0"].value;
@@ -202,7 +203,8 @@ function submitNewNote(e){
                 if(result[url].indexOf(newNote) < 0){
                     result[url].push(newNote);
                     let noteID = newNote.replace(/\W+/g, '')
-                    $("#points ul").append('<li id="' + noteID + 'note' + '">' + newNote + ' <br> <button id="' + newNote + '"> edit </button> <button class="delete" id="' + newNote + '"> delete </button>' + '</li>');
+
+                    $("#points ul").append('<li class="textback" id="' + noteID + 'note">' + newNote + ' <br> <button class="edit" id="' + newNote + '"> edit</button> <button class="delete" id="' + newNote + '">x </button>' + '</li>');
                 }
                 chrome.storage.sync.set(result, function() {});
             });
